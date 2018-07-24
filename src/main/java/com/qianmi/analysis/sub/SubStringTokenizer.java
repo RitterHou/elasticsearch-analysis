@@ -5,6 +5,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class SubStringTokenizer extends Tokenizer {
     private final List<Position> positions;
 
     private int offset = 0;
+
+    private int byteSize = 0;
 
 
     /**
@@ -68,8 +71,13 @@ public class SubStringTokenizer extends Tokenizer {
             return false;
         }
 
+        if (offset == 0) {
+            byteSize = input.read(charArray);
+            if (byteSize <= 0) {
+                return false;
+            }
+        }
         Position position = positions.get(offset);
-        int byteSize = input.read(charArray);
         int validSize = Math.min(byteSize, position.getSize());
         char[] buffer = termAtt.buffer();
         if (Position.DIRECTION_PRE.equals(position.getDirection())) {
@@ -87,6 +95,8 @@ public class SubStringTokenizer extends Tokenizer {
     @Override
     public void reset() throws IOException {
         super.reset();
+        Arrays.fill(charArray, 0, byteSize, '\u0000');
         offset = 0;
+        byteSize = 0;
     }
 }
