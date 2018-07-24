@@ -20,6 +20,8 @@ public class SubStringTokenizer extends Tokenizer {
 
     private final CharacterUtils.CharacterBuffer ioBuffer = CharacterUtils.newCharacterBuffer(IO_BUFFER_SIZE);
 
+    private  char[] charArray = new char[IO_BUFFER_SIZE];
+
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
 
     private final List<Position> positions;
@@ -73,22 +75,25 @@ public class SubStringTokenizer extends Tokenizer {
         }
 
         Position position = positions.get(offset);
-        charUtils.fill(ioBuffer, input);
+//        charUtils.fill(ioBuffer, input);
+        int byteSize = input.read(charArray);
         int validSize = position.getSize();
-        if (ioBuffer.getLength() < position.getSize()) {
+        if (byteSize < position.getSize()) {
             validSize = ioBuffer.getLength();
         }
 
-        char[] inputChars = ioBuffer.getBuffer();
+//        char[] inputChars = ioBuffer.getBuffer();
+        char[] inputChars = charArray;
         char[] buffer = termAtt.buffer();
         if (Position.DIRECTION_PRE.equals(position.getDirection())) {
             System.arraycopy(inputChars, 0, buffer, 0, validSize);
         } else {
-            int startPos = ioBuffer.getLength() - validSize;
+            int startPos = byteSize - validSize;
             System.arraycopy(inputChars, startPos, buffer, 0, validSize);
         }
 
         termAtt.setLength(validSize);
+        offset++;
         return true;
     }
 
@@ -96,6 +101,6 @@ public class SubStringTokenizer extends Tokenizer {
     public void reset() throws IOException {
         super.reset();
         offset = 0;
-        ioBuffer.reset();
+//        ioBuffer.reset();
     }
 }
