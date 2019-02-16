@@ -95,7 +95,9 @@ public class SubStringTokenizer extends Tokenizer {
     @Override
     public void reset() throws IOException {
         super.reset();
-        Arrays.fill(charArray, 0, byteSize, '\u0000');
+        if (byteSize > 0) {
+            Arrays.fill(charArray, 0, byteSize, '\u0000');
+        }
         offset = 0;
         byteSize = 0;
     }
