@@ -1,166 +1,241 @@
 package org.ansj.elasticsearch.index.config;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.Set;
-
-
-import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
-import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
-import org.ansj.elasticsearch.pubsub.redis.RedisUtils;
+import org.ansj.dic.PathToStream;
+import org.ansj.library.*;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
-import org.elasticsearch.common.logging.ESLogger;
-import org.elasticsearch.common.logging.Loggers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.elasticsearch.SpecialPermission;
+import org.elasticsearch.common.collect.MapBuilder;
+import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
-
 import org.nlpcn.commons.lang.util.IOUtil;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import org.nlpcn.commons.lang.util.StringUtil;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AnsjElasticConfigurator {
-    public static ESLogger logger = Loggers.getLogger("ansj-analyzer");
-    private static boolean loaded = false;
-    public static Set<String> filter;
-    public static boolean pstemming = false;
-    public static Environment environment;
-    public static String DEFAULT_USER_LIB_PATH = "ansj/dic/user";
-    public static String DEFAULT_AMB_FILE_LIB_PATH = "ansj/dic/ambiguity.dic";
-    public static String DEFAULT_STOP_FILE_LIB_PATH = "ansj/dic/stopLibrary.dic";
-    public static boolean DEFAULT_IS_NAME_RECOGNITION = true;
-    public static boolean DEFAULT_IS_NUM_RECOGNITION = true;
-    public static boolean DEFAUT_IS_QUANTIFIE_RRECOGNITION = true;
 
-    public static void init(Settings indexSettings, Settings settings) {
-    	if (isLoaded()) {
-			return;
-		}
-    	environment  =new Environment(indexSettings);
-        initConfigPath(settings);
-        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", false);
-        if(enabledStopFilter) {
-            loadFilter(settings);
-        }
-        try{
-        	preheat();
-        	logger.info("ansj分词器预热完毕，可以使用!");
-        }catch(Exception e){
-        	logger.error("ansj分词预热失败，请检查路径");
-        }
-        initRedis(settings);
-        setLoaded(true);
-    }
-    
-    private static void initRedis(final Settings settings) {
-		if(null==settings.get("redis.ip")){
-			logger.info("没有找到redis相关配置!");
-			return;
-		}
-		new Thread(new  Runnable() {
-			@Override
-			public void run() {
-				RedisPoolBuilder redisPoolBuilder = new RedisPoolBuilder();
-				int maxActive = settings.getAsInt("redis.pool.maxactive", redisPoolBuilder.getMaxActive());
-				int maxIdle = settings.getAsInt("redis.pool.maxidle", redisPoolBuilder.getMaxIdle());
-				int maxWait = settings.getAsInt("redis.pool.maxwait", redisPoolBuilder.getMaxWait());
-				boolean testOnBorrow = settings.getAsBoolean("redis.pool.testonborrow", redisPoolBuilder.isTestOnBorrow());
-				logger.debug("maxActive:"+maxActive+",maxIdle:"+maxIdle+",maxWait:"+maxWait+",testOnBorrow:"+testOnBorrow );
-				
-				String ipAndport = settings.get("redis.ip",redisPoolBuilder.getIpAddress());
-				int port = settings.getAsInt("redis.port", redisPoolBuilder.getPort());
-				String channel = settings.get("redis.channel","ansj_term");
-				logger.debug("ip:"+ipAndport+",port:"+port+",channel:"+channel);
-				
-				JedisPool pool = redisPoolBuilder.setMaxActive(maxActive).setMaxIdle(maxIdle).setMaxWait(maxWait).setTestOnBorrow(testOnBorrow)
-				.setIpAddress(ipAndport).setPort(port).jedisPool();
-				RedisUtils.setJedisPool(pool);
-				final Jedis jedis = RedisUtils.getConnection();
-				
-				logger.debug("pool:"+(pool==null)+",jedis:"+(jedis==null));
-				logger.info("redis守护线程准备完毕,ip:{},port:{},channel:{}",ipAndport,port,channel );
-				jedis.subscribe(new AddTermRedisPubSub(), new String[]{channel});
-				RedisUtils.closeConnection(jedis);
-				
-			}
-		}).start();
-		
-	}
+    private static final Logger LOG = LogManager.getLogger("ansj-initializer");
 
-    private static void preheat() {
-        ToAnalysis.parse("一个词");
+    private static final String CONFIG_FILE_NAME = "ansj.cfg.yml";
+
+    private String path;
+
+    private Settings ansjSettings;
+
+    private File configDir;
+
+    private Environment env;
+
+    @Inject
+    public AnsjElasticConfigurator(Environment env) {
+        this.env = env;
+
+        //
+        init();
+
+        LOG.info("init ansj plugin ok , goodluck youyou");
     }
 
-    private static void initConfigPath(Settings settings) {
-        //是否提取词干
-        pstemming = settings.getAsBoolean("pstemming", false);
-        //用户自定义辞典
-        File path = new File(environment.pluginsFile(),settings.get("user_path",DEFAULT_USER_LIB_PATH));
-        MyStaticValue.userLibrary = path.getAbsolutePath();
-        logger.debug("用户词典路径:{}",MyStaticValue.userLibrary );
-        //用户自定义辞典
-        path = new File(environment.pluginsFile(),settings.get("ambiguity",DEFAULT_AMB_FILE_LIB_PATH));
-        MyStaticValue.ambiguityLibrary = path.getAbsolutePath();
-        logger.debug("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
-
-        MyStaticValue.isNameRecognition = settings.getAsBoolean("is_name",DEFAULT_IS_NAME_RECOGNITION);
-
-        MyStaticValue.isNumRecognition = settings.getAsBoolean("is_num",DEFAULT_IS_NUM_RECOGNITION);
-
-        MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("is_quantifier",DEFAUT_IS_QUANTIFIE_RRECOGNITION);
-        
-    }
-
-    private static void loadFilter(Settings settings) {
-        Set<String> filters = new HashSet<String>();
-        String stopLibraryPath = settings.get("stop_path",DEFAULT_STOP_FILE_LIB_PATH);
-
-        if (stopLibraryPath == null) {
-            return;
+    private void init() {
+        Path configFilePath = env.configFile().resolve("elasticsearch-analysis-ansj").resolve(CONFIG_FILE_NAME);
+        LOG.info("try to load ansj config file: {}", configFilePath);
+        if (!Files.exists(configFilePath)) {
+            configFilePath = Paths.get(new File(AnsjElasticConfigurator.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent(), "config").resolve(CONFIG_FILE_NAME);
+            LOG.info("try to load ansj config file: {}", configFilePath);
         }
-
-        File stopLibrary = new File(environment.configFile(), stopLibraryPath);
-        logger.debug("停止词典路径:{}",stopLibrary.getAbsolutePath() );
-        if (!stopLibrary.isFile()) {
-            logger.info("Can't find the file:" + stopLibraryPath
-                        + ", no such file or directory exists!");
-            emptyFilter();
-            setLoaded(true);
-            return;
-        }
-
-        BufferedReader br;
-        try {
-            br = IOUtil.getReader(stopLibrary.getAbsolutePath(), "UTF-8");
-            String temp = null;
-            while ((temp = br.readLine()) != null) {
-                filters.add(temp);
+        Settings.Builder builder = Settings.builder();
+        if (Files.exists(configFilePath)) {
+            try {
+                builder.loadFromPath(configFilePath);
+                LOG.info("load ansj config: {}", configFilePath);
+            } catch (IOException e) {
+                LOG.error("load ansj config[{}] error: {}", configFilePath, e);
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            LOG.warn("can't find ansj config file");
         }
-        filter = filters;
-        logger.info("ansj停止词典加载完毕!");
+
+        Settings settings = builder.build();
+        path = settings.get("ansj_config");
+        ansjSettings = settings.getAsSettings("ansj");
+        configDir = env.configFile().toFile();
+
+        flushConfig();
+
+        // 进行一次测试分词
+        preheat();
     }
 
-    private static void emptyFilter() {
-        filter = new HashSet<String>();
+    private void flushConfig() {
+        MyStaticValue.ENV.clear();
+
+        // 插入到变量中
+        if (ansjSettings != null && !ansjSettings.isEmpty()) {
+            MyStaticValue.ENV.putAll(ansjSettings.keySet().stream().collect(Collectors.toMap(k -> k, ansjSettings::get)));
+        }
+
+        // 设置全局变量
+        setGlobalVar(MyStaticValue.ENV);
+
+        if (path != null) {
+            initConfig(path, true);
+        } else {
+            initConfig(new File(configDir, "ansj_library.properties").getAbsolutePath(), false);
+        }
+
+        // 加载词典
+        initDic();
     }
 
-    public static boolean isLoaded() {
-        return loaded;
+    private void initConfig(String path, boolean printErr) {
+        SpecialPermission.check();
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            try (BufferedReader br = IOUtil.getReader(PathToStream.stream(path), "utf-8")) {
+                String temp;
+                int index;
+                while ((temp = br.readLine()) != null) {
+                    if (StringUtil.isBlank(temp) || temp.trim().charAt(0) == '#' || !temp.contains("=")) {
+                        continue;
+                    }
+
+                    index = temp.indexOf('=');
+
+                    MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1).trim());
+                }
+            } catch (Exception e) {
+                if (printErr) {
+                    LOG.error("{} load err: {}", path, e);
+                } else {
+                    LOG.warn("{} load err", path);
+                }
+            }
+            return null;
+        });
     }
 
-    public static void setLoaded(boolean loaded) {
-    	AnsjElasticConfigurator.loaded = loaded;
+    private void initDic() {
+        SpecialPermission.check();
+        for (String k : MyStaticValue.ENV.keySet().toArray(new String[0])) {
+            if (k.startsWith(DicLibrary.DEFAULT)) {
+                DicLibrary.keys().removeIf(k::equals);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    DicLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(StopLibrary.DEFAULT)) {
+                StopLibrary.keys().removeIf(k::equals);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    StopLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(SynonymsLibrary.DEFAULT)) {
+                SynonymsLibrary.keys().removeIf(k::equals);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    SynonymsLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(AmbiguityLibrary.DEFAULT)) {
+                AmbiguityLibrary.keys().removeIf(k::equals);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    AmbiguityLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(CrfLibrary.DEFAULT)) {
+                CrfLibrary.keys().removeIf(k::equals);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    CrfLibrary.get(k);
+                    return null;
+                });
+            }
+        }
     }
 
+    private void preheat() {
+        ToAnalysis.parse("这是一个基于ansj的分词插件");
+    }
+
+    /**
+     * 设置一些全局变量
+     *
+     * @param map
+     */
+    private void setGlobalVar(Map<String, String> map) {
+        // 是否开启人名识别
+        if (map.containsKey("isNameRecognition")) {
+            MyStaticValue.isNameRecognition = Boolean.valueOf(map.get("isNameRecognition"));
+        }
+
+        // 是否开启数字识别
+        if (map.containsKey("isNumRecognition")) {
+            MyStaticValue.isNumRecognition = Boolean.valueOf(map.get("isNumRecognition"));
+        }
+
+        // 是否数字和量词合并
+        if (map.containsKey("isQuantifierRecognition")) {
+            MyStaticValue.isQuantifierRecognition = Boolean.valueOf(map.get("isQuantifierRecognition"));
+        }
+
+        // 是否显示真实词语
+        if (map.containsKey("isRealName")) {
+            MyStaticValue.isRealName = Boolean.valueOf(map.get("isRealName"));
+        }
+
+        // 是否用户辞典不加载相同的词
+        if (map.containsKey("isSkipUserDefine")) {
+            MyStaticValue.isSkipUserDefine = Boolean.valueOf(map.get("isSkipUserDefine"));
+        }
+    }
+
+    public void reloadConfig() {
+        init();
+        LOG.info("reload ansj plugin config successfully");
+
+        LOG.info("to remove DicLibrary keys not in MyStaticValue.ENV");
+        DicLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+
+        LOG.info("to remove StopLibrary keys not in MyStaticValue.ENV");
+        StopLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+
+        LOG.info("to remove SynonymsLibrary keys not in MyStaticValue.ENV");
+        SynonymsLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+
+        LOG.info("to remove AmbiguityLibrary keys not in MyStaticValue.ENV");
+        AmbiguityLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+    }
+
+    /**
+     * 默认配置
+     */
+    public static Map<String, String> getDefaults() {
+        return MapBuilder.<String, String>newMapBuilder()
+                // 是否开启人名识别
+                .put("isNameRecognition", MyStaticValue.isNameRecognition.toString())
+                // 是否开启数字识别
+                .put("isNumRecognition", MyStaticValue.isNumRecognition.toString())
+                // 是否数字和量词合并
+                .put("isQuantifierRecognition", MyStaticValue.isQuantifierRecognition.toString())
+                // 是否显示真实词语
+                .put("isRealName", MyStaticValue.isRealName.toString())
+                // 是否用户辞典不加载相同的词
+                .put("isSkipUserDefine", String.valueOf(MyStaticValue.isSkipUserDefine))
+                .put(CrfLibrary.DEFAULT, CrfLibrary.DEFAULT)
+                .put(DicLibrary.DEFAULT, DicLibrary.DEFAULT)
+                .put(StopLibrary.DEFAULT, StopLibrary.DEFAULT)
+                .put(SynonymsLibrary.DEFAULT, SynonymsLibrary.DEFAULT)
+                .put(AmbiguityLibrary.DEFAULT, AmbiguityLibrary.DEFAULT)
+                .immutableMap();
+    }
 }
