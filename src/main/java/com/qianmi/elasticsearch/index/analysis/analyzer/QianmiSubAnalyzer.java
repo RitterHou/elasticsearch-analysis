@@ -1,0 +1,26 @@
+package com.qianmi.elasticsearch.index.analysis.analyzer;
+
+import com.qianmi.elasticsearch.index.analysis.tokenizer.QianmiSubTokenizer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.Tokenizer;
+
+/**
+ * @author hourui 2020/4/30 3:59 PM
+ */
+public class QianmiSubAnalyzer extends Analyzer {
+
+    private static final Logger LOG = LogManager.getLogger();
+
+    public QianmiSubAnalyzer() {
+        LOG.info("Init class QianmiSubAnalyzer");
+    }
+
+    @Override
+    protected TokenStreamComponents createComponents(String fieldName) {
+        Tokenizer tokenizer = new QianmiSubTokenizer();
+        return new TokenStreamComponents(tokenizer);
+    }
+
+}
