@@ -1,6 +1,7 @@
 package com.qianmi.elasticsearch.plugin;
 
-import com.qianmi.elasticsearch.index.analysis.QianmiAnalyzerProvider;
+import com.qianmi.elasticsearch.index.analysis.QianmiStandardAnalyzerProvider;
+import com.qianmi.elasticsearch.index.analysis.QianmiSubAnalyzerProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -21,9 +22,8 @@ public class AnalysisQianmiPlugin extends Plugin implements AnalysisPlugin, Acti
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
         Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>();
 
-        extra.put("qm_standard", (indexSettings, env, name, settings) -> new QianmiAnalyzerProvider(indexSettings, name, settings));
-        extra.put("prefix", (indexSettings, env, name, settings) -> new QianmiAnalyzerProvider(indexSettings, name, settings));
-        extra.put("postfix", (indexSettings, env, name, settings) -> new QianmiAnalyzerProvider(indexSettings, name, settings));
+        extra.put("qm_standard", (indexSettings, env, name, settings) -> new QianmiStandardAnalyzerProvider(indexSettings, name, settings));
+        extra.put("sub", (indexSettings, env, name, settings) -> new QianmiSubAnalyzerProvider(indexSettings, name, settings));
 
         LOG.info("Set extra {} success", extra);
         return extra;
