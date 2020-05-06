@@ -4,9 +4,13 @@ import com.qianmi.elasticsearch.index.analysis.tokenizer.QianmiSubTokenizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.settings.Settings;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +33,13 @@ public class QianmiSubAnalyzer extends Analyzer {
         for (String s : section.split(";")) {
             String[] values = s.split(":");
             if (values.length == 2) {
-                int value1 = Integer.parseInt(values[0]);
-                int value2 = Integer.parseInt(values[1]);
-                positions.add(new Position(value1, value2));
+                try {
+                    int value1 = Integer.parseInt(values[0]);
+                    int value2 = Integer.parseInt(values[1]);
+                    positions.add(new Position(value1, value2));
+                } catch (NumberFormatException e) {
+                    LOG.error(e);
+                }
             }
         }
 
@@ -39,8 +47,9 @@ public class QianmiSubAnalyzer extends Analyzer {
 
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
-        LOG.info(positions);
-        Tokenizer tokenizer = new QianmiSubTokenizer();
+        LOG.info("Create components and positions: {}", positions);
+        BufferedReader reader = new BufferedReader(new StringReader(fieldName));
+        Tokenizer tokenizer = new QianmiSubTokenizer(reader, positions);
         return new TokenStreamComponents(tokenizer);
     }
 
