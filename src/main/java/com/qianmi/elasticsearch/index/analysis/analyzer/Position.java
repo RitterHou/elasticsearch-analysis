@@ -10,9 +10,9 @@ public class Position {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private int value1;
+    private final int value1;
 
-    private int value2;
+    private final int value2;
 
     Position(int value1, int value2) {
         this.value1 = value1;
@@ -31,15 +31,18 @@ public class Position {
         if (length == 0) {
             return charArray;
         }
-        while (value1 < 0) {
-            value1 = length + value1;
+
+        int v1 = value1;
+        int v2 = value2;
+        while (v1 < 0) {
+            v1 += length;
         }
-        while (value2 < 0) {
-            value2 = length + value2;
+        while (v2 < 0) {
+            v2 += length;
         }
 
-        int start = Math.min(value1, value2);
-        int end = Math.max(value1, value2);
+        int start = Math.min(v1, v2);
+        int end = Math.max(v1, v2);
 
         if (start >= length) {
             start = 0;
