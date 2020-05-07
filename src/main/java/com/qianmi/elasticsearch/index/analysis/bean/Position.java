@@ -1,4 +1,4 @@
-package com.qianmi.elasticsearch.index.analysis.analyzer;
+package com.qianmi.elasticsearch.index.analysis.bean;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +14,7 @@ public class Position {
 
     private final int value2;
 
-    Position(int value1, int value2) {
+    public Position(int value1, int value2) {
         this.value1 = value1;
         this.value2 = value2;
     }

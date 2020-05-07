@@ -1,7 +1,7 @@
 package com.qianmi.elasticsearch.index.analysis.tokenizer;
 
-import com.qianmi.elasticsearch.index.analysis.analyzer.Position;
-import com.qianmi.elasticsearch.index.analysis.analyzer.SubParseResult;
+import com.qianmi.elasticsearch.index.analysis.bean.Position;
+import com.qianmi.elasticsearch.index.analysis.bean.SubParseResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;

@@ -1,5 +1,6 @@
 package com.qianmi.elasticsearch.index.analysis.analyzer;
 
+import com.qianmi.elasticsearch.index.analysis.bean.Position;
 import com.qianmi.elasticsearch.index.analysis.tokenizer.QianmiSubTokenizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
