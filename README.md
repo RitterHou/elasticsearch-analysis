@@ -1,1430 +1,963 @@
-## 前言
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj?ref=badge_shield)
-
-
-这是一个elasticsearch的中文分词插件，基于ansj,感谢群内热心的朋友。
-并宣传一下我们的群QQ211682609
-
-## 版本对应
-
-| plugin        |     elasticsearch|
-| --------      |       -----:  |
-| 1.0.0         |     0.90.2    |
-| 1.x           |     1.x       |
-| 2.1.1         |     2.1.1     |
-| 2.3.1         |     2.3.1     |
-| 2.3.2         |     2.3.2     |
-| 2.3.3         |     2.3.3     |
-| 2.3.4         |     2.3.4     |
-| 2.3.5         |     2.3.5     |
-| 2.4.0         |     2.4.0     |
-| 2.4.1         |     2.4.1     |
-| 2.4.2         |     2.4.2     |
-| 2.4.3         |     2.4.3     |
-| 2.4.4         |     2.4.4     |
-| 2.4.5         |     2.4.5     |
-| 2.4.6         |     2.4.6     |
-| 5.0.0         |     5.0.0     |
-| 5.0.1         |     5.0.1     |
-| 5.0.2         |     5.0.2     |
-| 5.1.1         |     5.1.1     |
-| 5.1.2         |     5.1.2     |
-| 5.2.0         |     5.2.0     |
-| 5.2.1         |     5.2.1     |
-| 5.2.2         |     5.2.2     |
-| 5.3.0         |     5.3.0     |
-| 5.3.1         |     5.3.1     |
-| 5.3.2         |     5.3.2     |
-| 5.3.3         |     5.3.3     |
-| 5.4.0         |     5.4.0     |
-| 5.4.1         |     5.4.1     |
-| 5.4.2         |     5.4.2     |
-| 5.4.3         |     5.4.3     |
-| 5.5.0         |     5.5.0     |
-| 5.5.1         |     5.5.1     |
-| 5.5.2         |     5.5.2     |
-| 5.5.3         |     5.5.3     |
-| 5.6.0         |     5.6.0     |
-| 5.6.1         |     5.6.1     |
-| 5.6.2         |     5.6.2     |
-| 5.6.3         |     5.6.3     |
-| 5.6.4         |     5.6.4     |
-| 5.6.5         |     5.6.5     |
-| 5.6.6         |     5.6.6     |
-| 5.6.7         |     5.6.7     |
-| 5.6.8         |     5.6.8     |
-| 5.6.9         |     5.6.9     |
-| 5.6.10        |     5.6.10    |
-| 5.6.11        |     5.6.11    |
-| 5.6.12        |     5.6.12    |
-| 5.6.13        |     5.6.13    |
-| 5.6.14        |     5.6.14    |
-| 5.6.15        |     5.6.15    |
-| 5.6.16        |     5.6.16    |
-| 6.0.0         |     6.0.0     |
-| 6.0.1         |     6.0.1     |
-| 6.1.0         |     6.1.0     |
-| 6.1.1         |     6.1.1     |
-| 6.1.2         |     6.1.2     |
-| 6.1.3         |     6.1.3     |
-| 6.1.4         |     6.1.4     |
-| 6.2.0         |     6.2.0     |
-| 6.2.1         |     6.2.1     |
-| 6.2.2         |     6.2.2     |
-| 6.2.3         |     6.2.3     |
-| 6.2.4         |     6.2.4     |
-| 6.3.0         |     6.3.0     |
-| 6.3.1         |     6.3.1     |
-| 6.3.2         |     6.3.2     |
-| 6.4.0         |     6.4.0     |
-| 6.4.1         |     6.4.1     |
-| 6.4.2         |     6.4.2     |
-| 6.4.3         |     6.4.3     |
-| 6.5.0         |     6.5.0     |
-| 6.5.1         |     6.5.1     |
-| 6.5.2         |     6.5.2     |
-| 6.5.3         |     6.5.3     |
-| 6.5.4         |     6.5.4     |
-| 6.6.0         |     6.6.0     |
-| 6.6.1         |     6.6.1     |
-| 6.6.2         |     6.6.2     |
-| 6.7.0         |     6.7.0     |
-| 6.7.1         |     6.7.1     |
-| 6.7.2         |     6.7.2     |
-| 6.8.0         |     6.8.0     |
-| 6.8.1         |     6.8.1     |
-| 6.8.2         |     6.8.2     |
-| 6.8.3         |     6.8.3     |
-| 6.8.4         |     6.8.4     |
-| 7.0.0         |     7.0.0     |
-| 7.0.1         |     7.0.1     |
-| 7.1.0         |     7.1.0     |
-| 7.1.1         |     7.1.1     |
-| 7.2.0         |     7.2.0     |
-| 7.2.1         |     7.2.1     |
-| 7.3.0         |     7.3.0     |
-| 7.3.1         |     7.3.1     |
-| 7.3.2         |     7.3.2     |
-| 7.4.0         |     7.4.0     |
-| 7.4.1         |     7.4.1     |
-| master        |     7.4.2     |
-
-## 7.4.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.4.2/elasticsearch-analysis-ansj-7.4.2.0-release.zip
-````
-
-## 7.4.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.4.1/elasticsearch-analysis-ansj-7.4.1.0-release.zip
-````
-
-## 7.4.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.4.0/elasticsearch-analysis-ansj-7.4.0.0-release.zip
-````
-
-## 7.3.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.3.2/elasticsearch-analysis-ansj-7.3.2.0-release.zip
-````
-
-## 7.3.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.3.1/elasticsearch-analysis-ansj-7.3.1.0-release.zip
-````
-
-## 7.3.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.3.0/elasticsearch-analysis-ansj-7.3.0.0-release.zip
-````
-
-## 7.2.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.2.1/elasticsearch-analysis-ansj-7.2.1.0-release.zip
-````
-
-## 7.2.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.2.0/elasticsearch-analysis-ansj-7.2.0.0-release.zip
-````
-
-## 7.1.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.1.1/elasticsearch-analysis-ansj-7.1.1.0-release.zip
-````
-
-## 7.1.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.1.0/elasticsearch-analysis-ansj-7.1.0.0-release.zip
-````
-
-## 7.0.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.0.1/elasticsearch-analysis-ansj-7.0.1.0-release.zip
-````
-
-## 7.0.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.0.0/elasticsearch-analysis-ansj-7.0.0.0-release.zip
-````
-
-## 6.8.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.4/elasticsearch-analysis-ansj-6.8.4.0-release.zip
-````
-
-## 6.8.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.3/elasticsearch-analysis-ansj-6.8.3.0-release.zip
-````
-
-## 6.8.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.2/elasticsearch-analysis-ansj-6.8.2.0-release.zip
-````
-
-## 6.8.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.1/elasticsearch-analysis-ansj-6.8.1.0-release.zip
-````
-
-## 6.8.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.0/elasticsearch-analysis-ansj-6.8.0.0-release.zip
-````
-
-## 6.7.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.7.2/elasticsearch-analysis-ansj-6.7.2.0-release.zip
-````
-
-## 6.7.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.7.1/elasticsearch-analysis-ansj-6.7.1.0-release.zip
-````
-
-## 6.7.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.7.0/elasticsearch-analysis-ansj-6.7.0.0-release.zip
-````
-
-## 6.6.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.6.2/elasticsearch-analysis-ansj-6.6.2.0-release.zip
-````
-
-## 6.6.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.6.1/elasticsearch-analysis-ansj-6.6.1.0-release.zip
-````
-
-## 6.6.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.6.0/elasticsearch-analysis-ansj-6.6.0.0-release.zip
-````
-
-## 6.5.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.4/elasticsearch-analysis-ansj-6.5.4.0-release.zip
-````
-
-## 6.5.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.3/elasticsearch-analysis-ansj-6.5.3.0-release.zip
-````
-
-## 6.5.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.2/elasticsearch-analysis-ansj-6.5.2.0-release.zip
-````
-
-## 6.5.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.1/elasticsearch-analysis-ansj-6.5.1.0-release.zip
-````
-
-## 6.5.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.0/elasticsearch-analysis-ansj-6.5.0.0-release.zip
-````
-
-## 6.4.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.4.3/elasticsearch-analysis-ansj-6.4.3.0-release.zip
-````
-
-## 6.4.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.4.2/elasticsearch-analysis-ansj-6.4.2.0-release.zip
-````
-
-## 6.4.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.4.1/elasticsearch-analysis-ansj-6.4.1.0-release.zip
-````
-
-## 6.4.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.4.0/elasticsearch-analysis-ansj-6.4.0.0-release.zip
-````
-
-## 6.3.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.3.2/elasticsearch-analysis-ansj-6.3.2.0-release.zip
-````
-
-## 6.3.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.3.1/elasticsearch-analysis-ansj-6.3.1.0-release.zip
-````
-
-## 6.3.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.3.0/elasticsearch-analysis-ansj-6.3.0.0-release.zip
-````
-
-## 6.2.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.2.4/elasticsearch-analysis-ansj-6.2.4.0-release.zip
-````
-
-## 6.2.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.2.3/elasticsearch-analysis-ansj-6.2.3.0-release.zip
-````
-
-## 6.2.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.2.2/elasticsearch-analysis-ansj-6.2.2.0-release.zip
-````
-
-## 6.2.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.2.1/elasticsearch-analysis-ansj-6.2.1.0-release.zip
-````
-
-## 6.2.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.2.0/elasticsearch-analysis-ansj-6.2.0.0-release.zip
-````
-
-## 6.1.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.1.4/elasticsearch-analysis-ansj-6.1.4.0-release.zip
-````
-
-## 6.1.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.1.3/elasticsearch-analysis-ansj-6.1.3.0-release.zip
-````
-
-## 6.1.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.1.2/elasticsearch-analysis-ansj-6.1.2.0-release.zip
-````
-
-## 6.1.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.1.1/elasticsearch-analysis-ansj-6.1.1.0-release.zip
-````
-
-## 6.1.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.1.0/elasticsearch-analysis-ansj-6.1.0.0-release.zip
-````
-
-## 6.0.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.0.1/elasticsearch-analysis-ansj-6.0.1.0-release.zip
-````
-
-## 6.0.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.0.0/elasticsearch-analysis-ansj-6.0.0.0-release.zip
-````
-
-## 5.6.16 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.16/elasticsearch-analysis-ansj-5.6.16.0-release.zip
-````
-
-## 5.6.15 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.15/elasticsearch-analysis-ansj-5.6.15.0-release.zip
-````
-
-## 5.6.14 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.14/elasticsearch-analysis-ansj-5.6.14.0-release.zip
-````
-
-## 5.6.13 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.13/elasticsearch-analysis-ansj-5.6.13.0-release.zip
-````
-
-## 5.6.12 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.12/elasticsearch-analysis-ansj-5.6.12.0-release.zip
-````
-
-## 5.6.11 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.11/elasticsearch-analysis-ansj-5.6.11.0-release.zip
-````
-
-## 5.6.10 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.10/elasticsearch-analysis-ansj-5.6.10.0-release.zip
-````
-
-## 5.6.9 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.9/elasticsearch-analysis-ansj-5.6.9.0-release.zip
-````
-
-## 5.6.8 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.8/elasticsearch-analysis-ansj-5.6.8.0-release.zip
-````
-
-## 5.6.7 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.7/elasticsearch-analysis-ansj-5.6.7.0-release.zip
-````
-
-## 5.6.6 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.6/elasticsearch-analysis-ansj-5.6.6.0-release.zip
-````
-
-## 5.6.5 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.5/elasticsearch-analysis-ansj-5.6.5.0-release.zip
-````
-
-## 5.6.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.4/elasticsearch-analysis-ansj-5.6.4.0-release.zip
-````
-
-## 5.6.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.3/elasticsearch-analysis-ansj-5.6.3.0-release.zip
-````
-
-## 5.6.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.2/elasticsearch-analysis-ansj-5.6.2.0-release.zip
-````
-
-## 5.6.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.1/elasticsearch-analysis-ansj-5.6.1.0-release.zip
-````
-
-## 5.6.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.0/elasticsearch-analysis-ansj-5.6.0.0-release.zip
-````
-
-## 5.5.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.5.3/elasticsearch-analysis-ansj-5.5.3.0-release.zip
-````
-
-## 5.5.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.5.2/elasticsearch-analysis-ansj-5.5.2.0-release.zip
-````
-
-## 5.5.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.5.1/elasticsearch-analysis-ansj-5.5.1.0-release.zip
-````
-
-## 5.5.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.5.0/elasticsearch-analysis-ansj-5.5.0.0-release.zip
-````
-
-## 5.4.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.4.3/elasticsearch-analysis-ansj-5.4.3.0-release.zip
-````
-
-## 5.4.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.4.2/elasticsearch-analysis-ansj-5.4.2.0-release.zip
-````
-
-## 5.4.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.4.1/elasticsearch-analysis-ansj-5.4.1.0-release.zip
-````
-
-## 5.4.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.4.0/elasticsearch-analysis-ansj-5.4.0.0-release.zip
-````
-
-## 5.3.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.3.3/elasticsearch-analysis-ansj-5.3.3.0-release.zip
-````
-
-## 5.3.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.3.2/elasticsearch-analysis-ansj-5.3.2.0-release.zip
-````
-
-## 5.3.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.3.1/elasticsearch-analysis-ansj-5.3.1.0-release.zip
-````
-
-## 5.3.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.3.0/elasticsearch-analysis-ansj-5.3.0.0-release.zip
-````
-
-## 5.2.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.2.2/elasticsearch-analysis-ansj-5.2.2.0-release.zip
-````
-
-## 5.2.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.2.1/elasticsearch-analysis-ansj-5.2.1.0-release.zip
-````
-
-## 5.2.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.2.0/elasticsearch-analysis-ansj-5.2.0.0-release.zip
-````
-
-## 5.1.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.1.2/elasticsearch-analysis-ansj-5.1.2.0-release.zip
-````
-
-## 5.1.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.1.1/elasticsearch-analysis-ansj-5.1.1.0-release.zip
-````
-
-## 5.0.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.0.2/elasticsearch-analysis-ansj-5.0.2.0-release.zip
-````
-
-## 5.0.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.0.1/elasticsearch-analysis-ansj-5.0.1.1-release.zip
-````
-
-## 5.0.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.0.0/elasticsearch-analysis-ansj-5.0.0.0-release.zip
-````
-
-## 2.4.6 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.6/elasticsearch-analysis-ansj-2.4.6.0-release.zip
-````
-
-## 2.4.5 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.5/elasticsearch-analysis-ansj-2.4.5.0-release.zip
-````
-
-## 2.4.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.4/elasticsearch-analysis-ansj-2.4.4.0-release.zip
-````
-
-## 2.4.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.3/elasticsearch-analysis-ansj-2.4.3.0-release.zip
-````
-
-## 2.4.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.2/elasticsearch-analysis-ansj-2.4.2.0-release.zip
-````
-
-## 2.4.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.1/elasticsearch-analysis-ansj-2.4.1.0-release.zip
-````
-
-## 2.4.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.4.0.3/elasticsearch-analysis-ansj-2.4.0.3-release.zip
-````
-
-## 2.3.5 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5.3/elasticsearch-analysis-ansj-2.3.5.3-release.zip
-````
-
-## 2.3.4 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.4/elasticsearch-analysis-ansj-2.3.4-release.zip
-````
-
-## 2.3.3 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.3.3/elasticsearch-analysis-ansj-2.3.3.3-release.zip
-````
-
-## 2.3.2 插件安装
-
-进入Elasticsearch目录运行如下命令 
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.2.1/elasticsearch-analysis-ansj-2.3.2.1-release.zip
-````
-
-## 2.3.1 插件安装
-
-进入Elasticsearch目录运行如下命令 
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.1/elasticsearch-analysis-ansj-2.3.1-release.zip
-````
-
-
-## 2.1.1 插件安装
-
-进入Elasticsearch目录运行如下命令 
-
-````
-进入es目录执行如下命令
-
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.1.1/elasticsearch-analysis-ansj-2.1.1-release.zip
-````
-
-## 1.x 插件安装
-
-进入Elasticsearch目录运行如下命令 
-
-````
-./bin/plugin -u http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/1.x.1/elasticsearch-analysis-ansj-1.x.1-release.zip -i ansj
-````
-
-
-==========
-
-## 2019年1月20日
-+ ansj_seg升级至5.1.6
-
-
-## 2017年4月9日
-+ ansj_seg升级至5.1.1
-+ 支持配置同义词词典
-+ 支持自定义分词器
-+ 支持从http，文件，数据库，jar，class加载词典
-+ 热词更新，用http接口取代redis
-
-
-## 2016年11月11日
-+ elasticsearch更新至5.0.0
-+ ansj_seg升级至5.0.4
-+ 新增配置文件config/ansj.cfg.yml
-
-
-## 2016年04月16日
-+ elasticsearch更新2.3.1
-+ ansj_seg升级至3.7.3
-
-
-## 1770年01月01日
-+ elasticsearch更新2.1.1
-+ ansj_seg升级至3.5
-+ 新增http的_ansj接口，用于查看ansj分词词性
-+ 新增http的_cat/ansj接口,作用同上，显示为cat方式
-+ 新增http的_cat/[index]/analyze接口，和_analyze作用一样，显示为cat方式
-+ 更方便的配置
-
-先来点配置好的示例 ^ ^ 别吐槽我的格式化 (顺便求一个判断字符串中含有几个中文的方法)
-
-
-## 测试
-
-
-* 创建测试索引
-
-```linux
-curl -X PUT "127.0.0.1:9200/test" -H 'Content-Type: application/json' -d '{
-    "settings" : {
-        "number_of_shards" : 1,
-        "number_of_replicas" : 0
-
-    },
-    "mappings" : {
-        "test" : {
-            "_all" : { "enabled" : false },
-            "properties" : {
-                "name" : { "type" : "string", "analyzer" : "index_ansj", "search_analyzer" : "query_ansj" }
+## Qianmi Analyzer for Elasticsearch
+
+在创建索引时自定义analyzer
+
+    PUT http://localhost:9200/products
+    
+    {
+        "settings": {
+            "analysis": {
+                "analyzer": {
+                    "qm_standard": {
+                        "type": "qm_standard"
+                    },
+                    "prefix": {
+                        "type": "sub",
+                        "section": "0:3;0:5"
+                    },
+                    "postfix": {
+                        "type": "sub",
+                        "section": "-6:-1;-4:-1"
+                    }
+                }
+            }
+        },
+        "mappings": {
+            "properties": {
+                "title": {
+                    "type": "text",
+                    "analyzer": "qm_standard"
+                }
             }
         }
     }
-}'
-````
 
-* 添加索引内容
-
-````
-curl -X PUT "127.0.0.1:9200/test/test/1" -H 'Content-Type: application/json' -d '{
-    "name" : "中国人民万岁",
-    "post_date" : "2009-11-15T14:12:12",
-    "message" : "trying out Elasticsearch"
-}'
-````
-
-* 查询索引
-
-````
-浏览器访问:
-http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
-````
-
-
-* 如果你想把ansj作为你的默认分词需要在elasticsearch.yml加入如下配置:
-
-```yaml
-
-#默认分词器,索引
-index.analysis.analyzer.default.type: index_ansj
-
-#默认分词器,查询
-
-index.analysis.analyzer.default_search.type: query_ansj
-```
-
-
-
-## 关于分词器不得不说的那点小事
-````
-目前默认内置三个分词器
-
-当然如果你有心仔细观察日志看到了实例化了n多分词器如下
-
- regedit analyzer named : index_ansj
- regedit analyzer named : query_ansj
- regedit analyzer named : to_ansj
- regedit analyzer named : dic_ansj
- regedit analyzer named : user_ansj
- regedit analyzer named : search_ansj
-
-why????
-额 只有三个其他都是别名
-
-````
-
-
-### 索引分词
-
-```shell
-
-index_ansj 是索引分词,尽可能分词处所有结果 example
-
-http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=index_ansj
-
-六味  		0		2		0		word		
-地   		2		3		1		word		
-黄丸软 		3		6		2		word		
-胶囊  		6		8		3		word		
-六味地黄		0		4		4		word		
-地黄  		2		4		5		word		
-地黄丸 		2		5		6		word		
-软胶  		5		7		7		word		
-软胶囊 		5		8		8		word			
-
-
-````
-
-
-### 搜索分词 (search_ansj=to_ansj=query_ansj)
-
-```shell
-
-query_ansj 是搜索分词,是索引分词的子集,保证了准确率 example
-
-http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=query_ansj
-
-六味 		0		2		0		word		
-地  			2		3		1		word		
-黄丸软		3		6		2		word		
-胶囊 		6		8		3		word		
-
-````
-
-### 用户自定义词典优先的分词方式 (user_ansj=dic_ansj)
-
-```shell
-
-dic_ansj 是用户自定义词典优先策略
-
-http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=dic_ansj
-
-六味地黄		0		4		0		word		
-丸   		4		5		1		word		
-软胶囊 		5		8		2		word		
-
-````
-
-
-
-## 编译安装
-
-* 第一步，你要有一个`elasticsearch`的服务器(废话) 版本2.1.1
-
-* 第二步，把代码clone到本地
-
-* 第三步，mvn clean install
-
-* 第四步，进入$Project_Home/target/releases 目录，
-
-* 第五步，拷贝$Project_Home/target/releases/目录下的zip包到解压到$ES_HOME/plugins目录下
-
-
-
- 
-现在,你的es集群已经有下面三个名字的analyzer
-
-+ index_ansj (建议索引使用)
-+ query_ansj (建议搜索使用)
-+ dic_ansj
-
-三个名字的tokenizer
-
-+ index_ansj (建议索引使用)
-+ query_ansj (建议搜索使用)
-+ dic_ansj
-
-
-## 分词文件配置:
-### 2.4.2或5.2.0以上:
-- 5.2.0以上配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/elasticsearch-analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
-```yaml
-# 全局变量配置方式一
-ansj:
-  #默认参数配置
-  isNameRecognition: true #开启姓名识别
-  isNumRecognition: true #开启数字识别
-  isQuantifierRecognition: true #是否数字和量词合并
-  isRealName: false; #是否保留真实词语,建议保留false
-
-  #用户自定词典配置
-  dic: default.dic #也可以写成 file//default.dic , 如果未配置dic,则此词典默认加载
-  # http方式加载
-  #dic_d1: http://xxx/xx.dic
-  # jar中文件加载
-  #dic_d2: jar://org.ansj.dic.DicReader|/dic2.dic
-  # 从数据库中加载
-  #dic_d3: jdbc://jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
-  # 从自定义类中加载,YourClas  extends PathToStream
-  #dic_d3: class://xxx.xxx.YourClas|ohterparam
-
-  #过滤词典配置
-  #stop: http,file,jar,class,jdbc 都支持
-  #stop_key1: ...
-
-  #歧义词典配置
-  #ambiguity: http,file,jar,class,jdbc 都支持
-  #ambiguity_key1: ...
-
-  #同义词词典配置
-  #synonyms: http,file,jar,class,jdbc 都支持
-  #synonyms_key1: ...
-
-# 全局变量配置方式二 通过配置文件的方式配置,优先级高于es本身的配置
-ansj_config: ansj_library.properties # http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
-```
-- 配置自定义分词器
-```yaml
-# 配置自定义分词器
-index:
-  analysis:
-    tokenizer :
-      my_dic :
-        # 类型支持base_ansj, index_ansj, query_ansj, dic_ansj, nlp_ansj
-        type : dic_ansj   
-        dic: dic
-        stop: stop
-        ambiguity: ambiguity
-        synonyms: synonyms
-        isNameRecognition: true
-        isNumRecognition: true
-        isQuantifierRecognition: true
-        isRealName: false
-
-    analyzer:
-      my_dic:
-        type: custom
-        tokenizer: my_dic
-```
-- http接口
-  + /_cat/ansj: 执行分词
-  + /_cat/ansj/config: 显示全部配置
-  + /_ansj/flush/config: 刷新全部配置
-  + /_ansj/flush/dic: 更新全部词典。包括用户自定义词典,停用词典,同义词典,歧义词典,crf
-
-### 2.4.2或5.2.0以下:
-在这里我说一下，在插件里我写了一些默认配置，如果你也可以接受我的默认配置，关于ansj就完全不用配置了，或者只修改你需要的配置。下面的代码目录都是相对es的config目录，有几点需要注意一下:
-
-+ ansj的核心词典是和插件一起安装的在插件目录下面
-+ 由于使用redis的pubsub功能，需要相关权限控制，安装的时候必须获得允许，而2.3.3.2以前的版本需要加./elasticsearch -Des.security.manager.enabled=false参数才能解决
-+ 请慎重使用redis的pubsub功能
-+ 5.0.0版本新增配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/elasticsearch-analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
-
-```yaml
-## ansj配置
-ansj:
- dic_path: "ansj/dic/user/" ##用户词典位置
- ambiguity_path: "ansj/dic/ambiguity.dic" ##歧义词典
- enable_name_recognition: true ##人名识别
- enable_num_recognition: true ##数字识别
- enable_quantifier_recognition: false ##量词识别
- enabled_stop_filter: true ##是否基于词典过滤
- enable_skip_user_define: false ## 是否用户词典不加载相同的词
- stop_path: "ansj/dic/stopLibrary.dic" ##停止过滤词典
-## redis 不是必需的
- redis:
-  pool:
-   maxactive: 20
-   maxidle: 10
-   maxwait: 100
-   testonborrow: true
-  ip: 10.0.85.51:6379
-  timeout: 2000
-  #password: "******" ## 不要添加这个配置，除非redis需要权限认证
-  channel: ansj_term ## publish时的channel名称
-  write:
-    dic: "ext.dic" ## 如果有使用redis的pubsub方式更新词典。如果没有配置，默认使用的是$ES_HOME/config/ansj/dic/user/ext.dic
-```
-
-
-
-
-* 查询分词
-
-可以使用开头我提供的http接口来查看分词效果
-
-然后通过redis发布一个新词看看
-追加新词
-```
-redis-cli
-publish ansj_term u:c:视康
-
-```
-
-是不是分词发生了变化
-删除词条
-```
-redis-cli
-publish ansj_term u:d:视康
-```
-
-又回来了
-
-然后通过redis发布一个歧义词
-追加歧义词
-```
-redis-cli
-publish ansj_term a:c:减肥瘦身-减肥,nr,瘦身,v
-```
-
-是不是分词发生了变化
-删除歧义词
-```
-redis-cli
-publish ansj_term a:d:减肥瘦身
-```
-
-又回来了
-
-
-## 结束
-就写这么多吧，有啥问题，QQ找我
-
-
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj?ref=badge_large)
+测试qm_standard分词器
+
+    POST http://localhost:9200/products/_analyze
+    
+    {
+        "analyzer": "qm_standard",
+        "text": "のCIM(CROSS-IM2232323)11 一款面向开发者的 IM(即时通讯)系统；同时提供了一些组件帮助开发者构建一款属于自己可水平扩展的 IM 。借助 CIM 你可以实现以下需求：IM 即时通讯系统。适用于 APP 的消息推送中间件。IOT 海量连接场の景中的消息透传中间件。在使用或开发过程中有任何疑问都可联系我。11155a55哈哈😆😁111"
+    }
+    
+    {
+        "tokens": [
+            {
+                "token": "の",
+                "start_offset": 0,
+                "end_offset": 1,
+                "type": "CJK",
+                "position": 0
+            },
+            {
+                "token": "CIM",
+                "start_offset": 2,
+                "end_offset": 5,
+                "type": "word",
+                "position": 1
+            },
+            {
+                "token": "CROSS",
+                "start_offset": 6,
+                "end_offset": 11,
+                "type": "word",
+                "position": 2
+            },
+            {
+                "token": "IM",
+                "start_offset": 12,
+                "end_offset": 14,
+                "type": "word",
+                "position": 3
+            },
+            {
+                "token": "2232323",
+                "start_offset": 14,
+                "end_offset": 21,
+                "type": "number",
+                "position": 4
+            },
+            {
+                "token": "11",
+                "start_offset": 22,
+                "end_offset": 24,
+                "type": "number",
+                "position": 5
+            },
+            {
+                "token": "一",
+                "start_offset": 24,
+                "end_offset": 25,
+                "type": "CJK",
+                "position": 6
+            },
+            {
+                "token": "款",
+                "start_offset": 25,
+                "end_offset": 26,
+                "type": "CJK",
+                "position": 7
+            },
+            {
+                "token": "面",
+                "start_offset": 26,
+                "end_offset": 27,
+                "type": "CJK",
+                "position": 8
+            },
+            {
+                "token": "向",
+                "start_offset": 27,
+                "end_offset": 28,
+                "type": "CJK",
+                "position": 9
+            },
+            {
+                "token": "开",
+                "start_offset": 28,
+                "end_offset": 29,
+                "type": "CJK",
+                "position": 10
+            },
+            {
+                "token": "发",
+                "start_offset": 29,
+                "end_offset": 30,
+                "type": "CJK",
+                "position": 11
+            },
+            {
+                "token": "者",
+                "start_offset": 30,
+                "end_offset": 31,
+                "type": "CJK",
+                "position": 12
+            },
+            {
+                "token": "的",
+                "start_offset": 31,
+                "end_offset": 32,
+                "type": "CJK",
+                "position": 13
+            },
+            {
+                "token": "IM",
+                "start_offset": 34,
+                "end_offset": 36,
+                "type": "word",
+                "position": 14
+            },
+            {
+                "token": "即",
+                "start_offset": 36,
+                "end_offset": 37,
+                "type": "CJK",
+                "position": 15
+            },
+            {
+                "token": "时",
+                "start_offset": 37,
+                "end_offset": 38,
+                "type": "CJK",
+                "position": 16
+            },
+            {
+                "token": "通",
+                "start_offset": 38,
+                "end_offset": 39,
+                "type": "CJK",
+                "position": 17
+            },
+            {
+                "token": "讯",
+                "start_offset": 39,
+                "end_offset": 40,
+                "type": "CJK",
+                "position": 18
+            },
+            {
+                "token": "系",
+                "start_offset": 41,
+                "end_offset": 42,
+                "type": "CJK",
+                "position": 19
+            },
+            {
+                "token": "统",
+                "start_offset": 42,
+                "end_offset": 43,
+                "type": "CJK",
+                "position": 20
+            },
+            {
+                "token": "同",
+                "start_offset": 44,
+                "end_offset": 45,
+                "type": "CJK",
+                "position": 21
+            },
+            {
+                "token": "时",
+                "start_offset": 45,
+                "end_offset": 46,
+                "type": "CJK",
+                "position": 22
+            },
+            {
+                "token": "提",
+                "start_offset": 46,
+                "end_offset": 47,
+                "type": "CJK",
+                "position": 23
+            },
+            {
+                "token": "供",
+                "start_offset": 47,
+                "end_offset": 48,
+                "type": "CJK",
+                "position": 24
+            },
+            {
+                "token": "了",
+                "start_offset": 48,
+                "end_offset": 49,
+                "type": "CJK",
+                "position": 25
+            },
+            {
+                "token": "一",
+                "start_offset": 49,
+                "end_offset": 50,
+                "type": "CJK",
+                "position": 26
+            },
+            {
+                "token": "些",
+                "start_offset": 50,
+                "end_offset": 51,
+                "type": "CJK",
+                "position": 27
+            },
+            {
+                "token": "组",
+                "start_offset": 51,
+                "end_offset": 52,
+                "type": "CJK",
+                "position": 28
+            },
+            {
+                "token": "件",
+                "start_offset": 52,
+                "end_offset": 53,
+                "type": "CJK",
+                "position": 29
+            },
+            {
+                "token": "帮",
+                "start_offset": 53,
+                "end_offset": 54,
+                "type": "CJK",
+                "position": 30
+            },
+            {
+                "token": "助",
+                "start_offset": 54,
+                "end_offset": 55,
+                "type": "CJK",
+                "position": 31
+            },
+            {
+                "token": "开",
+                "start_offset": 55,
+                "end_offset": 56,
+                "type": "CJK",
+                "position": 32
+            },
+            {
+                "token": "发",
+                "start_offset": 56,
+                "end_offset": 57,
+                "type": "CJK",
+                "position": 33
+            },
+            {
+                "token": "者",
+                "start_offset": 57,
+                "end_offset": 58,
+                "type": "CJK",
+                "position": 34
+            },
+            {
+                "token": "构",
+                "start_offset": 58,
+                "end_offset": 59,
+                "type": "CJK",
+                "position": 35
+            },
+            {
+                "token": "建",
+                "start_offset": 59,
+                "end_offset": 60,
+                "type": "CJK",
+                "position": 36
+            },
+            {
+                "token": "一",
+                "start_offset": 60,
+                "end_offset": 61,
+                "type": "CJK",
+                "position": 37
+            },
+            {
+                "token": "款",
+                "start_offset": 61,
+                "end_offset": 62,
+                "type": "CJK",
+                "position": 38
+            },
+            {
+                "token": "属",
+                "start_offset": 62,
+                "end_offset": 63,
+                "type": "CJK",
+                "position": 39
+            },
+            {
+                "token": "于",
+                "start_offset": 63,
+                "end_offset": 64,
+                "type": "CJK",
+                "position": 40
+            },
+            {
+                "token": "自",
+                "start_offset": 64,
+                "end_offset": 65,
+                "type": "CJK",
+                "position": 41
+            },
+            {
+                "token": "己",
+                "start_offset": 65,
+                "end_offset": 66,
+                "type": "CJK",
+                "position": 42
+            },
+            {
+                "token": "可",
+                "start_offset": 66,
+                "end_offset": 67,
+                "type": "CJK",
+                "position": 43
+            },
+            {
+                "token": "水",
+                "start_offset": 67,
+                "end_offset": 68,
+                "type": "CJK",
+                "position": 44
+            },
+            {
+                "token": "平",
+                "start_offset": 68,
+                "end_offset": 69,
+                "type": "CJK",
+                "position": 45
+            },
+            {
+                "token": "扩",
+                "start_offset": 69,
+                "end_offset": 70,
+                "type": "CJK",
+                "position": 46
+            },
+            {
+                "token": "展",
+                "start_offset": 70,
+                "end_offset": 71,
+                "type": "CJK",
+                "position": 47
+            },
+            {
+                "token": "的",
+                "start_offset": 71,
+                "end_offset": 72,
+                "type": "CJK",
+                "position": 48
+            },
+            {
+                "token": "IM",
+                "start_offset": 74,
+                "end_offset": 76,
+                "type": "word",
+                "position": 49
+            },
+            {
+                "token": "借",
+                "start_offset": 77,
+                "end_offset": 78,
+                "type": "CJK",
+                "position": 50
+            },
+            {
+                "token": "助",
+                "start_offset": 78,
+                "end_offset": 79,
+                "type": "CJK",
+                "position": 51
+            },
+            {
+                "token": "CIM",
+                "start_offset": 81,
+                "end_offset": 84,
+                "type": "word",
+                "position": 52
+            },
+            {
+                "token": "你",
+                "start_offset": 84,
+                "end_offset": 85,
+                "type": "CJK",
+                "position": 53
+            },
+            {
+                "token": "可",
+                "start_offset": 85,
+                "end_offset": 86,
+                "type": "CJK",
+                "position": 54
+            },
+            {
+                "token": "以",
+                "start_offset": 86,
+                "end_offset": 87,
+                "type": "CJK",
+                "position": 55
+            },
+            {
+                "token": "实",
+                "start_offset": 87,
+                "end_offset": 88,
+                "type": "CJK",
+                "position": 56
+            },
+            {
+                "token": "现",
+                "start_offset": 88,
+                "end_offset": 89,
+                "type": "CJK",
+                "position": 57
+            },
+            {
+                "token": "以",
+                "start_offset": 89,
+                "end_offset": 90,
+                "type": "CJK",
+                "position": 58
+            },
+            {
+                "token": "下",
+                "start_offset": 90,
+                "end_offset": 91,
+                "type": "CJK",
+                "position": 59
+            },
+            {
+                "token": "需",
+                "start_offset": 91,
+                "end_offset": 92,
+                "type": "CJK",
+                "position": 60
+            },
+            {
+                "token": "求",
+                "start_offset": 92,
+                "end_offset": 93,
+                "type": "CJK",
+                "position": 61
+            },
+            {
+                "token": "IM",
+                "start_offset": 95,
+                "end_offset": 97,
+                "type": "word",
+                "position": 62
+            },
+            {
+                "token": "即",
+                "start_offset": 97,
+                "end_offset": 98,
+                "type": "CJK",
+                "position": 63
+            },
+            {
+                "token": "时",
+                "start_offset": 98,
+                "end_offset": 99,
+                "type": "CJK",
+                "position": 64
+            },
+            {
+                "token": "通",
+                "start_offset": 99,
+                "end_offset": 100,
+                "type": "CJK",
+                "position": 65
+            },
+            {
+                "token": "讯",
+                "start_offset": 100,
+                "end_offset": 101,
+                "type": "CJK",
+                "position": 66
+            },
+            {
+                "token": "系",
+                "start_offset": 101,
+                "end_offset": 102,
+                "type": "CJK",
+                "position": 67
+            },
+            {
+                "token": "统",
+                "start_offset": 102,
+                "end_offset": 103,
+                "type": "CJK",
+                "position": 68
+            },
+            {
+                "token": "适",
+                "start_offset": 104,
+                "end_offset": 105,
+                "type": "CJK",
+                "position": 69
+            },
+            {
+                "token": "用",
+                "start_offset": 105,
+                "end_offset": 106,
+                "type": "CJK",
+                "position": 70
+            },
+            {
+                "token": "于",
+                "start_offset": 106,
+                "end_offset": 107,
+                "type": "CJK",
+                "position": 71
+            },
+            {
+                "token": "APP",
+                "start_offset": 109,
+                "end_offset": 112,
+                "type": "word",
+                "position": 72
+            },
+            {
+                "token": "的",
+                "start_offset": 112,
+                "end_offset": 113,
+                "type": "CJK",
+                "position": 73
+            },
+            {
+                "token": "消",
+                "start_offset": 113,
+                "end_offset": 114,
+                "type": "CJK",
+                "position": 74
+            },
+            {
+                "token": "息",
+                "start_offset": 114,
+                "end_offset": 115,
+                "type": "CJK",
+                "position": 75
+            },
+            {
+                "token": "推",
+                "start_offset": 115,
+                "end_offset": 116,
+                "type": "CJK",
+                "position": 76
+            },
+            {
+                "token": "送",
+                "start_offset": 116,
+                "end_offset": 117,
+                "type": "CJK",
+                "position": 77
+            },
+            {
+                "token": "中",
+                "start_offset": 117,
+                "end_offset": 118,
+                "type": "CJK",
+                "position": 78
+            },
+            {
+                "token": "间",
+                "start_offset": 118,
+                "end_offset": 119,
+                "type": "CJK",
+                "position": 79
+            },
+            {
+                "token": "件",
+                "start_offset": 119,
+                "end_offset": 120,
+                "type": "CJK",
+                "position": 80
+            },
+            {
+                "token": "IOT",
+                "start_offset": 122,
+                "end_offset": 125,
+                "type": "word",
+                "position": 81
+            },
+            {
+                "token": "海",
+                "start_offset": 125,
+                "end_offset": 126,
+                "type": "CJK",
+                "position": 82
+            },
+            {
+                "token": "量",
+                "start_offset": 126,
+                "end_offset": 127,
+                "type": "CJK",
+                "position": 83
+            },
+            {
+                "token": "连",
+                "start_offset": 127,
+                "end_offset": 128,
+                "type": "CJK",
+                "position": 84
+            },
+            {
+                "token": "接",
+                "start_offset": 128,
+                "end_offset": 129,
+                "type": "CJK",
+                "position": 85
+            },
+            {
+                "token": "场",
+                "start_offset": 129,
+                "end_offset": 130,
+                "type": "CJK",
+                "position": 86
+            },
+            {
+                "token": "の",
+                "start_offset": 130,
+                "end_offset": 131,
+                "type": "CJK",
+                "position": 87
+            },
+            {
+                "token": "景",
+                "start_offset": 131,
+                "end_offset": 132,
+                "type": "CJK",
+                "position": 88
+            },
+            {
+                "token": "中",
+                "start_offset": 132,
+                "end_offset": 133,
+                "type": "CJK",
+                "position": 89
+            },
+            {
+                "token": "的",
+                "start_offset": 133,
+                "end_offset": 134,
+                "type": "CJK",
+                "position": 90
+            },
+            {
+                "token": "消",
+                "start_offset": 134,
+                "end_offset": 135,
+                "type": "CJK",
+                "position": 91
+            },
+            {
+                "token": "息",
+                "start_offset": 135,
+                "end_offset": 136,
+                "type": "CJK",
+                "position": 92
+            },
+            {
+                "token": "透",
+                "start_offset": 136,
+                "end_offset": 137,
+                "type": "CJK",
+                "position": 93
+            },
+            {
+                "token": "传",
+                "start_offset": 137,
+                "end_offset": 138,
+                "type": "CJK",
+                "position": 94
+            },
+            {
+                "token": "中",
+                "start_offset": 138,
+                "end_offset": 139,
+                "type": "CJK",
+                "position": 95
+            },
+            {
+                "token": "间",
+                "start_offset": 139,
+                "end_offset": 140,
+                "type": "CJK",
+                "position": 96
+            },
+            {
+                "token": "件",
+                "start_offset": 140,
+                "end_offset": 141,
+                "type": "CJK",
+                "position": 97
+            },
+            {
+                "token": "在",
+                "start_offset": 142,
+                "end_offset": 143,
+                "type": "CJK",
+                "position": 98
+            },
+            {
+                "token": "使",
+                "start_offset": 143,
+                "end_offset": 144,
+                "type": "CJK",
+                "position": 99
+            },
+            {
+                "token": "用",
+                "start_offset": 144,
+                "end_offset": 145,
+                "type": "CJK",
+                "position": 100
+            },
+            {
+                "token": "或",
+                "start_offset": 145,
+                "end_offset": 146,
+                "type": "CJK",
+                "position": 101
+            },
+            {
+                "token": "开",
+                "start_offset": 146,
+                "end_offset": 147,
+                "type": "CJK",
+                "position": 102
+            },
+            {
+                "token": "发",
+                "start_offset": 147,
+                "end_offset": 148,
+                "type": "CJK",
+                "position": 103
+            },
+            {
+                "token": "过",
+                "start_offset": 148,
+                "end_offset": 149,
+                "type": "CJK",
+                "position": 104
+            },
+            {
+                "token": "程",
+                "start_offset": 149,
+                "end_offset": 150,
+                "type": "CJK",
+                "position": 105
+            },
+            {
+                "token": "中",
+                "start_offset": 150,
+                "end_offset": 151,
+                "type": "CJK",
+                "position": 106
+            },
+            {
+                "token": "有",
+                "start_offset": 151,
+                "end_offset": 152,
+                "type": "CJK",
+                "position": 107
+            },
+            {
+                "token": "任",
+                "start_offset": 152,
+                "end_offset": 153,
+                "type": "CJK",
+                "position": 108
+            },
+            {
+                "token": "何",
+                "start_offset": 153,
+                "end_offset": 154,
+                "type": "CJK",
+                "position": 109
+            },
+            {
+                "token": "疑",
+                "start_offset": 154,
+                "end_offset": 155,
+                "type": "CJK",
+                "position": 110
+            },
+            {
+                "token": "问",
+                "start_offset": 155,
+                "end_offset": 156,
+                "type": "CJK",
+                "position": 111
+            },
+            {
+                "token": "都",
+                "start_offset": 156,
+                "end_offset": 157,
+                "type": "CJK",
+                "position": 112
+            },
+            {
+                "token": "可",
+                "start_offset": 157,
+                "end_offset": 158,
+                "type": "CJK",
+                "position": 113
+            },
+            {
+                "token": "联",
+                "start_offset": 158,
+                "end_offset": 159,
+                "type": "CJK",
+                "position": 114
+            },
+            {
+                "token": "系",
+                "start_offset": 159,
+                "end_offset": 160,
+                "type": "CJK",
+                "position": 115
+            },
+            {
+                "token": "我",
+                "start_offset": 160,
+                "end_offset": 161,
+                "type": "CJK",
+                "position": 116
+            },
+            {
+                "token": "11155",
+                "start_offset": 163,
+                "end_offset": 168,
+                "type": "number",
+                "position": 117
+            },
+            {
+                "token": "a",
+                "start_offset": 168,
+                "end_offset": 169,
+                "type": "word",
+                "position": 118
+            },
+            {
+                "token": "55",
+                "start_offset": 169,
+                "end_offset": 171,
+                "type": "number",
+                "position": 119
+            },
+            {
+                "token": "哈",
+                "start_offset": 170,
+                "end_offset": 171,
+                "type": "CJK",
+                "position": 120
+            },
+            {
+                "token": "哈",
+                "start_offset": 171,
+                "end_offset": 172,
+                "type": "CJK",
+                "position": 121
+            },
+            {
+                "token": "111",
+                "start_offset": 176,
+                "end_offset": 179,
+                "type": "number",
+                "position": 122
+            }
+        ]
+    }
+    
+测试sub分词器，在这里就是我们自定义的prefix和postfix分词器
+
+    POST http://localhost:9200/products/_analyzer
+    
+    {
+        "analyzer": "prefix",
+        "text": "TCC20040112442814525679"
+    }
+    
+    {
+        "tokens": [
+            {
+                "token": "TCC2",
+                "start_offset": 0,
+                "end_offset": 3,
+                "type": "word",
+                "position": 0
+            },
+            {
+                "token": "TCC200",
+                "start_offset": 0,
+                "end_offset": 5,
+                "type": "word",
+                "position": 1
+            }
+        ]
+    }
+    
+    POST http://localhost:9200/products/_analyzer
+
+    {
+        "analyzer": "postfix",
+        "text": "TCC20040112442814525679"
+    }
+    
+    {
+        "tokens": [
+            {
+                "token": "525679",
+                "start_offset": 17,
+                "end_offset": 22,
+                "type": "word",
+                "position": 0
+            },
+            {
+                "token": "5679",
+                "start_offset": 19,
+                "end_offset": 22,
+                "type": "word",
+                "position": 1
+            }
+        ]
+    }
+    
