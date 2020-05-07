@@ -1,9 +1,14 @@
 package com.qianmi.elasticsearch.index.analysis.analyzer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author hourui 2020/4/30 5:32 PM
  */
 public class Position {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     private int value1;
 
@@ -14,8 +19,18 @@ public class Position {
         this.value2 = value2;
     }
 
+    /**
+     * 根据当前的position配置对输入进行解析
+     *
+     * @param charArray 输入的字符数组
+     * @return 输出的字符数组
+     */
     public char[] parse(char[] charArray) {
         int length = charArray.length;
+        LOG.info("Parse char array size: {}", length);
+        if (length == 0) {
+            return charArray;
+        }
         while (value1 < 0) {
             value1 = length + value1;
         }
@@ -29,11 +44,11 @@ public class Position {
         if (start >= length) {
             start = 0;
         }
-        if (end >= length) {
+        if (end >= length || end == 0) {
             end = length - 1;
         }
 
-        char[] result = new char[end - start + 1];
+        char[] result = new char[end - start + 1]; // 加一表示[右闭]
         System.arraycopy(charArray, start, result, 0, result.length);
         return result;
     }
