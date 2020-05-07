@@ -1,4 +1,4 @@
-package com.qianmi.elasticsearch.index.analysis.bean;
+package com.qianmi.elasticsearch.index.analysis.common;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
