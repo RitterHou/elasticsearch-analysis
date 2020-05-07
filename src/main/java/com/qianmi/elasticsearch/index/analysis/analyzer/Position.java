@@ -25,11 +25,12 @@ public class Position {
      * @param charArray 输入的字符数组
      * @return 输出的字符数组
      */
-    public char[] parse(char[] charArray) {
+    public SubParseResult parse(char[] charArray) {
+        // TODO: 未对emoji做相应的处理
         int length = charArray.length;
         LOG.info("Parse char array size: {}", length);
         if (length == 0) {
-            return charArray;
+            return new SubParseResult(charArray, 0, 0);
         }
 
         int v1 = value1;
@@ -53,7 +54,7 @@ public class Position {
 
         char[] result = new char[end - start + 1]; // 加一表示[右闭]
         System.arraycopy(charArray, start, result, 0, result.length);
-        return result;
+        return new SubParseResult(result, start, end);
     }
 
     @Override

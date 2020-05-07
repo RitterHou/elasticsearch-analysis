@@ -1,10 +1,12 @@
 package com.qianmi.elasticsearch.index.analysis.tokenizer;
 
 import com.qianmi.elasticsearch.index.analysis.analyzer.Position;
+import com.qianmi.elasticsearch.index.analysis.analyzer.SubParseResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,13 +20,15 @@ public class QianmiSubTokenizer extends Tokenizer {
 
     private static final int IO_BUFFER_SIZE = 4096;
 
-    private List<Position> positions;
+    private final List<Position> positions;
 
     private int sectionOffset = 0;
 
     private char[] charArray;
 
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+
+    private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
 
     public QianmiSubTokenizer(List<Position> positions) {
         LOG.info("Init class QianmiSubTokenizer");
@@ -54,12 +58,16 @@ public class QianmiSubTokenizer extends Tokenizer {
             LOG.info("Read input: {}", sb);
         }
         Position position = positions.get(sectionOffset);
-        char[] result = position.parse(charArray);
+        SubParseResult subParseResult = position.parse(charArray);
+        char[] result = subParseResult.getChars();
 
         LOG.info("Sub tokenizer: {}, offset: {}, position: {}", new String(result), sectionOffset, position);
 
         termAtt.copyBuffer(result, 0, result.length);
         termAtt.setLength(result.length);
+
+        offsetAtt.setOffset(subParseResult.getStart(), subParseResult.getEnd());
+
         sectionOffset++;
         return true;
     }
