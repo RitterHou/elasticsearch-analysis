@@ -33,6 +33,8 @@ public class QianmiStandardTokenizer extends Tokenizer {
 
     private Character character;
 
+    private boolean isEmoji;
+
     public QianmiStandardTokenizer() {
         LOG.info("Init class QianmiStandardTokenizer");
     }
@@ -69,6 +71,13 @@ public class QianmiStandardTokenizer extends Tokenizer {
                 offset += 1;
                 c = chars[0];
             }
+
+            if (isEmoji) {
+                isEmoji = false;
+                termAtt.append(c); // 写入的emoji的第二个字符
+                return true;
+            }
+
             CharacterUtil.CharacterType characterType = CharacterUtil.getCharacterType(c);
 
             if (numList.size() > 0 && characterType != CharacterUtil.CharacterType.NUM) {
@@ -103,6 +112,12 @@ public class QianmiStandardTokenizer extends Tokenizer {
                     offsetAtt.setOffset(offset - 1, offset);
                     typeAtt.setType("CJK");
                     return true;
+                case EMOJI:
+                    termAtt.append(c); // 写入emoji的第一个字符
+                    offsetAtt.setOffset(offset - 1, offset + 1);
+                    typeAtt.setType("EMOJI");
+                    isEmoji = true;
+                    break;
                 default:
 
             }

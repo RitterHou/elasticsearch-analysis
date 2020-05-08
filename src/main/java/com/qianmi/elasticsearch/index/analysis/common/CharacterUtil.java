@@ -6,7 +6,7 @@ package com.qianmi.elasticsearch.index.analysis.common;
 public class CharacterUtil {
 
     public enum CharacterType {
-        NUM, WORD, CJK_C, CJK_K, CJK_J, UNKNOWN
+        NUM, WORD, CJK_C, CJK_K, CJK_J, EMOJI, UNKNOWN
     }
 
     /**
@@ -38,6 +38,9 @@ public class CharacterUtil {
                 // 日文字符集
                 return CharacterType.CJK_J;
             }
+        }
+        if ((int) c == 0xd83d) { // 选取了emoji的一个子集做处理
+            return CharacterType.EMOJI;
         }
         return CharacterType.UNKNOWN;
     }
