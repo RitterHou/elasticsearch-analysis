@@ -13,6 +13,8 @@ import org.elasticsearch.plugins.Plugin;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
+// 把千米分词器的导入放入到ansj的plugin中
 public class AnalysisQianmiPlugin extends Plugin implements AnalysisPlugin {
 
     private static final Logger LOG = LogManager.getLogger();

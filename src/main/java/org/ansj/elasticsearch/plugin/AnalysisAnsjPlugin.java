@@ -1,5 +1,7 @@
 package org.ansj.elasticsearch.plugin;
 
+import com.qianmi.elasticsearch.index.analysis.QianmiStandardAnalyzerProvider;
+import com.qianmi.elasticsearch.index.analysis.QianmiSubAnalyzerProvider;
 import org.ansj.elasticsearch.action.AnsjAction;
 import org.ansj.elasticsearch.action.TransportAnsjAction;
 import org.ansj.elasticsearch.cat.AnalyzerCatAction;
@@ -31,12 +33,7 @@ import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
@@ -74,6 +71,12 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
 
             LOG.info("regedit analyzer provider named : {}", type.name());
         }
+
+        // 导入千米分词器
+        extra.put("qm_standard", QianmiStandardAnalyzerProvider::new);
+        extra.put("sub", QianmiSubAnalyzerProvider::new);
+
+        LOG.info("Set extra {} success", extra);
 
         return extra;
     }

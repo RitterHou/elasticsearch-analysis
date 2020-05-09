@@ -9,7 +9,6 @@
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
-        <!--
         <fileSet>
             <directory>${project.basedir}/config/dic</directory>
             <outputDirectory>/</outputDirectory>
@@ -21,7 +20,6 @@
                 <exclude>**/dic/**</exclude>
             </excludes>
         </fileSet>
-        -->
 
         <fileSet>
             <directory>${project.basedir}/src/main/plugin-metadata</directory>
