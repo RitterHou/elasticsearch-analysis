@@ -55,6 +55,9 @@ public class QianmiSubTokenizer extends Tokenizer {
                 sb.append(result);
             }
             charArray = sb.toString().toCharArray();
+            if (charArray.length == 0) {
+                return false;
+            }
             LOG.info("Read input: {}", sb);
         }
         Position position = positions.get(sectionOffset);
