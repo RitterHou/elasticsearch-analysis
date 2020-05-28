@@ -127,7 +127,6 @@ public class QianmiStandardTokenizer extends Tokenizer {
     @Override
     public void reset() throws IOException {
         super.reset();
-        offset = 0;
         numList = new LinkedList<>();
         wordList = new LinkedList<>();
     }
