@@ -28,7 +28,7 @@ public class Position {
     public SubParseResult parse(char[] charArray) {
         // TODO: 未对emoji做相应的处理
         int length = charArray.length;
-        LOG.info("Parse char array size: {}", length);
+        LOG.debug("Parse char array size: {}", length);
         if (length == 0) {
             return new SubParseResult(charArray, 0, 0);
         }
