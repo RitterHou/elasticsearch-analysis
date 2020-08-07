@@ -14,7 +14,7 @@ public class QianmiStandardAnalyzer extends Analyzer {
     private static final Logger LOG = LogManager.getLogger();
 
     public QianmiStandardAnalyzer() {
-        LOG.info("Init class QianmiStandardAnalyzer");
+        LOG.debug("Init class QianmiStandardAnalyzer");
     }
 
     @Override

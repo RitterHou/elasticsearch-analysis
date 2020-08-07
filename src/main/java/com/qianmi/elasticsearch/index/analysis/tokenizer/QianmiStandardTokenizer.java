@@ -36,7 +36,7 @@ public class QianmiStandardTokenizer extends Tokenizer {
     private boolean isEmoji;
 
     public QianmiStandardTokenizer() {
-        LOG.info("Init class QianmiStandardTokenizer");
+        LOG.debug("Init class QianmiStandardTokenizer");
     }
 
     @Override
