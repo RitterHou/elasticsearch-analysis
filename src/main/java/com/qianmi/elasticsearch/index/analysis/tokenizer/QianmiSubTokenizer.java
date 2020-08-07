@@ -31,7 +31,7 @@ public class QianmiSubTokenizer extends Tokenizer {
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
 
     public QianmiSubTokenizer(List<Position> positions) {
-        LOG.info("Init class QianmiSubTokenizer");
+        LOG.debug("Init class QianmiSubTokenizer");
         this.positions = positions;
     }
 
@@ -58,18 +58,18 @@ public class QianmiSubTokenizer extends Tokenizer {
             if (charArray.length == 0) {
                 return false;
             }
-            LOG.info("Read input: {}", sb);
+            LOG.debug("Read input: {}", sb);
         }
         Position position = positions.get(sectionOffset);
         SubParseResult subParseResult = position.parse(charArray);
         char[] result = subParseResult.getChars();
 
-        LOG.info("Sub tokenizer: {}, offset: {}, position: {}", new String(result), sectionOffset, position);
+        LOG.debug("Sub tokenizer: {}, offset: {}, position: {}", new String(result), sectionOffset, position);
 
         termAtt.copyBuffer(result, 0, result.length);
         termAtt.setLength(result.length);
 
-        offsetAtt.setOffset(subParseResult.getStart(), subParseResult.getEnd());
+        offsetAtt.setOffset(sectionOffset, sectionOffset + 1);
 
         sectionOffset++;
         return true;

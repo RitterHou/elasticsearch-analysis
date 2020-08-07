@@ -20,10 +20,10 @@ public class QianmiSubAnalyzerProvider extends AbstractIndexAnalyzerProvider<Ana
     @Inject
     public QianmiSubAnalyzerProvider(IndexSettings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings) {
         super(indexSettings, name, settings);
-        LOG.info(indexSettings);
-        LOG.info(env);
-        LOG.info(name);
-        LOG.info(settings);
+        LOG.debug(indexSettings);
+        LOG.debug(env);
+        LOG.debug(name);
+        LOG.debug(settings);
 
         analyzer = new QianmiSubAnalyzer(settings);
     }

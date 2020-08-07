@@ -21,11 +21,11 @@ public class QianmiSubAnalyzer extends Analyzer {
     private List<Position> positions = new ArrayList<>();
 
     public QianmiSubAnalyzer(Settings settings) {
-        LOG.info("Init class QianmiSubAnalyzer");
+        LOG.debug("Init class QianmiSubAnalyzer");
         String section = settings.get("section");
         if (section == null) {
             section = "0:-1";
-            LOG.info("Set section default value: {}", section);
+            LOG.debug("Set section default value: {}", section);
         }
         for (String s : section.split(";")) {
             String[] values = s.split(":");
@@ -44,7 +44,7 @@ public class QianmiSubAnalyzer extends Analyzer {
 
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
-        LOG.info("Create components and positions: {}", positions);
+        LOG.debug("Create components and positions: {}", positions);
         Tokenizer tokenizer = new QianmiSubTokenizer(positions);
         return new TokenStreamComponents(tokenizer);
     }
