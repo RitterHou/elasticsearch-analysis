@@ -103,7 +103,7 @@ public class QianmiStandardTokenizer extends Tokenizer {
                     numList.add(c);
                     break;
                 case WORD:
-                    wordList.add(c);
+                    wordList.add(Character.toLowerCase(c));
                     break;
                 case CJK_C:
                 case CJK_K:
